@@ -17,6 +17,9 @@
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
+    "@tiptap/pm": "^3.7.2",
+    "@tiptap/react": "^3.7.2",
+    "@tiptap/starter-kit": "^3.7.2",
     "framer-motion": "^12.23.24",
     "next": "15.5.6",
     "react": "19.1.0",
