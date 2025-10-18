@@ -9,9 +9,19 @@ const Editor = () => {
     content: "<p>Hello World! 🌎️</p>",
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class:
+          "prose prose-neutral dark:prose-invert prose-lg focus:outline-none min-h-screen p-8 max-w-none",
+      },
+    },
   });
 
-  return <EditorContent editor={editor} />;
+  return (
+    <div className="h-full w-full overflow-auto bg-background">
+      <EditorContent editor={editor} />
+    </div>
+  );
 };
 
 export default Editor;
