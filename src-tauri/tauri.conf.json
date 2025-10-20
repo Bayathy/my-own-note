@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Amethyst",
   "version": "0.1.0",
-  "identifier": "com.amethyst.app",
+  "identifier": "com.amethyst.desktop",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
