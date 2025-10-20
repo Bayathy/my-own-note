@@ -11,8 +11,7 @@ const Editor = () => {
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class:
-          "prose prose-neutral dark:prose-invert prose-lg focus:outline-none min-h-screen p-8 max-w-none",
+        class: "prose prose-neutral dark:prose-invert prose-lg focus:outline-none min-h-screen p-8 max-w-none",
       },
     },
   });

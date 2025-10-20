@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { Folder } from "./folder";
-import { within, userEvent, expect } from "@storybook/test";
+import { expect, userEvent, within } from "@storybook/test";
 import type { File } from "../types/file";
+import { Folder } from "./folder";
 
 const meta: Meta<typeof Folder> = {
   title: "File/Folder",
@@ -63,5 +63,24 @@ export const Default: Story = {
     await expect(canvas.getByText("File 1")).toBeVisible();
     await expect(canvas.getByText("File 2")).toBeVisible();
     await expect(canvas.getByText("File 3")).toBeVisible();
+  },
+};
+
+export const OpenFile: Story = {
+  args: { file, openFileId: "2" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // フォルダを展開
+    await userEvent.click(canvas.getByText("Folder"));
+
+    // 全てのファイルが表示されることを確認
+    await expect(canvas.getByText("File 1")).toBeVisible();
+    await expect(canvas.getByText("File 2")).toBeVisible();
+    await expect(canvas.getByText("File 3")).toBeVisible();
+
+    // openFileId="2"のファイル（File 1）がハイライトされていることを確認
+    const file1Button = canvas.getByText("File 1").closest("button");
+    expect(file1Button).toHaveClass("bg-muted");
   },
 };
