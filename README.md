@@ -11,7 +11,8 @@ Turborepo monorepo for Amethyst note-taking application.
 │   └── api/            # Hono + Cloudflare Workers API
 ├── packages/
 │   ├── shared/         # Shared types and utilities
-│   └── tsconfig/       # Shared TypeScript configurations
+│   ├── tsconfig/       # Shared TypeScript configurations
+│   └── biome-config/   # Shared Biome (linter/formatter) configurations
 └── turbo.json          # Turborepo configuration
 ```
 
@@ -104,6 +105,13 @@ bun run test:coverage
 ### Shared Packages
 - **`@amethyst/shared`**: Shared types and utilities
 - **`@amethyst/tsconfig`**: Shared TypeScript configurations
+  - `base.json`: Common TypeScript settings
+  - `nextjs.json`: Next.js specific settings
+  - `workers.json`: Cloudflare Workers specific settings
+- **`@amethyst/biome-config`**: Shared Biome configurations
+  - `base.json`: Common linter/formatter settings
+  - `nextjs.json`: Next.js + React specific settings
+  - `workers.json`: Cloudflare Workers specific settings
 
 ## Learn More
 
@@ -111,3 +119,4 @@ bun run test:coverage
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Hono Documentation](https://hono.dev/)
 - [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/)
+- [Biome Documentation](https://biomejs.dev/)
