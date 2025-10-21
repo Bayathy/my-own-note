@@ -104,13 +104,13 @@ jobs:
           path: .next
           retention-days: 7
 
-  build-tauri:
-    name: Build Tauri (${{ matrix.platform }})
+  build-electron:
+    name: Build Electron (${{ matrix.platform }})
     needs: [lint-and-type-check]
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest]
+        platform: [macos-latest, ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.platform }}
     timeout-minutes: 30
@@ -124,28 +124,28 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
-
-      - name: Install frontend dependencies
+      - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build Tauri app
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile Electron main process
+        run: bun run electron:compile
 
-        
-      - name: Upload Tauri artifacts
+      - name: Build Next.js for Electron
+        run: bun run build
+        env:
+          NODE_ENV: production
+
+      - name: Build Electron app
+        run: bun run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Electron artifacts (macOS)
+        if: matrix.platform == 'macos-latest'
         uses: actions/upload-artifact@v4
         with:
-          name: tauri-${{ matrix.platform }}
-          path: src-tauri/target/release/bundle/**/*
+          name: electron-macos
+          path: release/*.dmg
           retention-days: 7
 
   security-audit:

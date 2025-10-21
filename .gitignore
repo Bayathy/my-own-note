@@ -40,5 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# electron
+/dist
+/release
+
 *storybook.log
 storybook-static

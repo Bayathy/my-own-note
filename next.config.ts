@@ -1,16 +1,11 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-
-const internalHost = process.env.TAURI_DEV_HOST || "localhost";
-
 const nextConfig: NextConfig = {
-  output: "export",
+  // Electron開発時はdevサーバー、本番時は静的エクスポート
+  output: process.env.NODE_ENV === "production" ? "export" : undefined,
   images: {
     unoptimized: true,
   },
-  // Configure assetPrefix or else the server won't properly resolve your assets.
-  assetPrefix: isProd ? undefined : `http://${internalHost}:3000`,
 };
 
 export default nextConfig;
