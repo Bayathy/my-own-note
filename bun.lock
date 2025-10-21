@@ -13,13 +13,13 @@
       "name": "@amethyst/api",
       "version": "0.1.0",
       "dependencies": {
-        "hono": "^4.7.17",
+        "hono": "^4.10.1",
       },
       "devDependencies": {
         "@biomejs/biome": "2.2.0",
         "@cloudflare/workers-types": "^4.20250110.0",
         "typescript": "^5",
-        "wrangler": "^4.0.0",
+        "wrangler": "^4.4.0",
       },
     },
     "apps/desktop": {
@@ -71,6 +71,10 @@
         "wait-on": "^9.0.1",
       },
     },
+    "packages/biome-config": {
+      "name": "@amethyst/biome-config",
+      "version": "0.1.0",
+    },
     "packages/shared": {
       "name": "@amethyst/shared",
       "version": "0.1.0",
@@ -92,6 +96,8 @@
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
 
     "@amethyst/api": ["@amethyst/api@workspace:apps/api"],
+
+    "@amethyst/biome-config": ["@amethyst/biome-config@workspace:packages/biome-config"],
 
     "@amethyst/desktop": ["@amethyst/desktop@workspace:apps/desktop"],
 
