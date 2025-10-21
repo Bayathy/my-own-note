@@ -4,149 +4,205 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Next.js 15 + Tauri 2 のハイブリッドデスクトップアプリケーション。
-Tiptapエディタを使用したノートアプリケーションとして開発中。
+Turborepoを使用したmonorepo構成のノートアプリケーション。
+Next.js 15 + ElectronのデスクトップアプリとHono + Cloudflare WorkersのAPIで構成。
+
+## プロジェクト構造
+
+```
+.
+├── apps/
+│   ├── desktop/        # Next.js 15 + Electron デスクトップアプリ
+│   └── api/            # Hono + Cloudflare Workers API
+├── packages/
+│   ├── shared/         # 共有型定義とユーティリティ
+│   ├── tsconfig/       # 共有TypeScript設定
+│   └── biome-config/   # 共有Biome設定
+└── turbo.json          # Turborepo設定
+```
 
 ## 開発コマンド
 
-### Next.jsアプリケーション
+### モノレポ全体
 ```bash
-# 開発サーバー起動
-bun dev
+# 全ワークスペースの開発サーバー起動
+bun run dev
 
-# 静的ビルド (Tauri用にexportモード)
+# 全ワークスペースのビルド
 bun run build
 
-# 型チェック
+# 型チェック (全ワークスペース)
 bun run type-check
 
-# Lintチェック
+# Lint (全ワークスペース)
 bun run lint
-
-# Lint自動修正
-bun run lint:fix
 
 # フォーマット
 bun run format
 
-# CI実行 (lint + type-check + build)
-bun run ci
+# クリーンアップ
+bun run clean
 ```
 
-### Tauriデスクトップアプリ
+### 個別ワークスペース
 ```bash
-# Tauriアプリ開発モード (ホットリロード有効)
-bun run tauri:dev
+# デスクトップアプリ開発
+cd apps/desktop && bun run dev
 
-# Tauriアプリビルド (プロダクション)
-bun run tauri:build
+# Electronアプリ開発
+cd apps/desktop && bun run electron:dev
+
+# API開発
+cd apps/api && bun run dev
+
+# 特定ワークスペースのビルド
+bun run build --filter=@amethyst/desktop
+bun run build --filter=@amethyst/api
 ```
 
 ## 技術スタック
 
+### Desktop App (`apps/desktop`)
 - **フロントエンド**: Next.js 15 (App Router), React 19
-- **デスクトップ**: Tauri 2 (Rust)
+- **デスクトップ**: Electron
 - **エディタ**: Tiptap 3 (React)
 - **UIライブラリ**: shadcn/ui, Tailwind CSS 4, Framer Motion
-- **開発ツール**: Biome (lint/format), TypeScript
+- **テスト**: Vitest, Playwright
+- **開発ツール**: Biome, TypeScript
+
+### API (`apps/api`)
+- **フレームワーク**: Hono
+- **ランタイム**: Cloudflare Workers
+- **開発ツール**: Wrangler, TypeScript, Biome
+
+### Shared Packages
+- **`@amethyst/shared`**: 共有型定義とユーティリティ
+- **`@amethyst/tsconfig`**: 共有TypeScript設定
+  - `base.json`: 共通設定
+  - `nextjs.json`: Next.js用設定
+  - `workers.json`: Cloudflare Workers用設定
+- **`@amethyst/biome-config`**: 共有Biome設定
+  - `base.json`: 共通設定
+  - `nextjs.json`: Next.js + React用設定
+  - `workers.json`: Workers用設定
 
 ## アーキテクチャ
 
-### ディレクトリ構造
+### Desktop App ディレクトリ構造
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── (editor)/          # エディタルートグループ
-│   │   ├── layout.tsx     # エディタレイアウト (Sidebar + ResizablePanel)
-│   │   └── page.tsx       # エディタページ
-│   ├── layout.tsx         # ルートレイアウト
-│   ├── page.tsx           # ホームページ
-│   └── globals.css        # グローバルスタイル
-├── components/            # 共有コンポーネント
-│   ├── ui/               # shadcn/ui コンポーネント
-│   │   ├── sidebar.tsx
-│   │   ├── resizable.tsx
-│   │   ├── button.tsx
-│   │   └── ...
-│   └── note-sidebar.tsx  # ノート用サイドバー
-├── features/              # 機能別モジュール
-│   └── editor/
-│       └── components/
-│           └── editor.tsx # Tiptapエディタコンポーネント
-├── lib/                   # ユーティリティ
-│   └── utils.ts          # cn()などのヘルパー
-└── hooks/                 # カスタムフック
-    └── use-mobile.ts     # モバイル検出フック
-src-tauri/                 # Tauriバックエンド (Rust)
+apps/desktop/
 ├── src/
-│   ├── main.rs           # メインエントリーポイント
-│   └── lib.rs            # ライブラリコード
-└── Cargo.toml            # Rust依存関係
+│   ├── app/                    # Next.js App Router
+│   │   ├── (editor)/          # エディタルートグループ
+│   │   │   ├── layout.tsx     # エディタレイアウト
+│   │   │   └── page.tsx       # エディタページ
+│   │   ├── layout.tsx         # ルートレイアウト
+│   │   ├── page.tsx           # ホームページ
+│   │   └── globals.css        # グローバルスタイル
+│   ├── components/            # 共有コンポーネント
+│   │   └── shadcn/           # shadcn/ui コンポーネント
+│   ├── features/              # 機能別モジュール
+│   │   ├── editor/           # Tiptapエディタ
+│   │   └── file/             # ファイル管理
+│   ├── lib/                   # ユーティリティ
+│   └── hooks/                 # カスタムフック
+├── electron/                  # Electronメインプロセス
+│   ├── main.ts               # メインエントリーポイント
+│   └── preload.ts            # プリロードスクリプト
+├── public/                    # 静的ファイル
+├── package.json
+├── tsconfig.json
+└── biome.json
 ```
 
-### 重要な設定
+### API ディレクトリ構造
 
-#### Next.js設定 (next.config.ts)
-- `output: "export"`: Tauri用の静的エクスポート
+```
+apps/api/
+├── src/
+│   └── index.ts              # Honoアプリエントリーポイント
+├── wrangler.jsonc            # Cloudflare Workers設定
+├── package.json
+├── tsconfig.json
+└── biome.json
+```
+
+## 重要な設定
+
+### Turborepo設定 (turbo.json)
+- パイプライン定義でビルド順序を制御
+- キャッシュ設定で効率的なビルド
+- 依存関係の自動解決
+
+### TypeScript設定の共通化
+各ワークスペースは`@amethyst/tsconfig`を継承:
+```json
+{
+  "extends": "@amethyst/tsconfig/nextjs.json"  // or workers.json
+}
+```
+
+### Biome設定の共通化
+各ワークスペースは`@amethyst/biome-config`を継承:
+```json
+{
+  "extends": ["@amethyst/biome-config/nextjs.json"]  // or workers.json
+}
+```
+
+### Next.js設定 (apps/desktop/next.config.ts)
+- `output: "export"`: Electron用の静的エクスポート
 - `images.unoptimized: true`: 静的エクスポート用
-- `assetPrefix`: 開発時のTauri連携用ホスト設定
 
-#### Tiptapエディタ
-- `immediatelyRender: false`: SSR問題回避のため、サーバーサイドでの即座レンダリングを無効化
-- クライアントサイドコンポーネント (`"use client"`)
+### Cloudflare Workers設定 (apps/api/wrangler.jsonc)
+- `compatibility_date`: Workers APIの互換性日付
+- `main`: エントリーポイントの指定
 
-#### Biome設定
-- Next.js/React推奨ルール適用
-- インデント: スペース2つ
-- Import自動整理有効
+## 開発フロー
 
-### 開発フロー
+1. **依存関係インストール**: `bun install` (ルートで実行)
+2. **開発サーバー起動**:
+   - デスクトップ: `cd apps/desktop && bun run dev`
+   - API: `cd apps/api && bun run dev`
+3. **型チェック**: `bun run type-check` (ルートで全チェック)
+4. **Lint**: `bun run lint` (ルートで全チェック)
+5. **ビルド**: `bun run build` (全ワークスペース)
 
-1. **フロントエンド開発**: `bun dev` でNext.jsアプリを開発
-2. **デスクトップ統合開発**: `bun run tauri:dev` でTauri + Next.jsをホットリロードで開発
-3. **型安全性**: `bun run type-check` で型エラー検出
-4. **コード品質**: `bun run lint` でBiomeによるチェック
-5. **CI前確認**: `bun run ci` で全チェック実行
+## 注意事項
 
-### 注意事項
-
-- Tiptapエディタは必ずクライアントコンポーネントとして実装
-- Tauri開発時は環境変数 `TAURI_DEV_HOST` で開発ホストを指定可能
+### Desktop App
+- Tiptapエディタは必ずクライアントコンポーネント (`"use client"`)
 - Next.jsは静的エクスポートモード (SSR/ISR不可)
-- Biomeがlint/formatツールとして統合されている (ESLint/Prettierは不使用)
+- Electronとの連携は`electron/`ディレクトリで管理
+
+### API
+- Honoアプリは`export default app`でエクスポート
+- Cloudflare Workersの環境変数は`wrangler.jsonc`で管理
+- ローカル開発は`wrangler dev`で実行
+
+### 共通
+- 各ワークスペースは独立したpackage.jsonを持つ
+- 共有設定は`packages/`で一元管理
+- Biomeがlint/formatツールとして統合 (ESLint/Prettierは不使用)
+- Turborepoがビルドキャッシュとタスクオーケストレーションを管理
 
 ## shadcn/ui 導入手順
 
-### 初期化
+### コンポーネント追加 (apps/desktopで実行)
 
 ```bash
-bunx shadcn@latest init
-```
-
-初期化時の設定:
-- スタイル: `new-york`
-- ベースカラー: `neutral`
-- CSS変数: 有効
-- Tailwind設定: `src/app/globals.css`
-
-### コンポーネント追加
-
-```bash
-# 個別コンポーネント追加
+cd apps/desktop
 bunx shadcn@latest add button
 bunx shadcn@latest add sidebar
 bunx shadcn@latest add resizable
-
-# 複数同時追加
-bunx shadcn@latest add sidebar resizable button
 ```
 
 ### 使用例
 
 ```tsx
-import { Button } from "@/components/ui/button";
-import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
+import { Button } from "@/components/shadcn/button";
+import { Sidebar, SidebarProvider } from "@/components/shadcn/sidebar";
 
 export default function MyComponent() {
   return (
@@ -159,21 +215,13 @@ export default function MyComponent() {
 }
 ```
 
-### Biome設定の調整
+## CI/CD
 
-shadcn/uiコンポーネントとの互換性のため、`biome.json`で以下を設定:
+GitHub Actionsで以下をチェック:
+- Lint & Type Check (全ワークスペース)
+- Test (Desktop App)
+- Build (Desktop App & API)
+- Electron Build (macOS)
+- Security Audit
 
-```json
-{
-  "linter": {
-    "rules": {
-      "suspicious": {
-        "noDocumentCookie": "off"
-      },
-      "correctness": {
-        "useExhaustiveDependencies": "warn"
-      }
-    }
-  }
-}
-```
+詳細は`.github/workflows/ci.yml`を参照。
