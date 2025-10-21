@@ -1,0 +1,6 @@
+name = "amethyst-api"
+main = "src/index.ts"
+compatibility_date = "2025-10-22"
+
+[observability]
+enabled = true

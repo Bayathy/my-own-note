@@ -56,6 +56,7 @@ jobs:
 
       - name: Install Playwright browsers
         run: bunx playwright install --with-deps chromium
+        working-directory: apps/desktop
 
       - name: Run tests with coverage
         run: bun run test:coverage
@@ -65,18 +66,18 @@ jobs:
         if: always()
         with:
           name: coverage-report
-          path: coverage
+          path: apps/desktop/coverage
           retention-days: 7
 
       - name: Report coverage to PR
         uses: davelosert/vitest-coverage-report-action@v2
         if: github.event_name == 'pull_request'
         with:
-          json-summary-path: ./coverage/coverage-summary.json
-          json-final-path: ./coverage/coverage-final.json
+          json-summary-path: ./apps/desktop/coverage/coverage-summary.json
+          json-final-path: ./apps/desktop/coverage/coverage-final.json
 
-  build:
-    name: Build Next.js
+  build-desktop:
+    name: Build Desktop App
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -92,17 +93,37 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build Next.js app
-        run: bun run build
+      - name: Build Desktop app
+        run: bun run build --filter=@amethyst/desktop
         env:
           NODE_ENV: production
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: nextjs-build
-          path: .next
+          name: desktop-build
+          path: apps/desktop/.next
           retention-days: 7
+
+  build-api:
+    name: Build API
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build API
+        run: bun run build --filter=@amethyst/api
 
   build-electron:
     name: Build Electron (${{ matrix.platform }})
@@ -129,14 +150,16 @@ jobs:
 
       - name: Compile Electron main process
         run: bun run electron:compile
+        working-directory: apps/desktop
 
       - name: Build Next.js for Electron
-        run: bun run build
+        run: bun run build --filter=@amethyst/desktop
         env:
           NODE_ENV: production
 
       - name: Build Electron app
         run: bun run electron:build
+        working-directory: apps/desktop
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -145,7 +168,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: electron-macos
-          path: release/*.dmg
+          path: apps/desktop/release/*.dmg
           retention-days: 7
 
   security-audit:

@@ -1,0 +1,22 @@
+{
+  "name": "@amethyst/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "build": "tsc",
+    "deploy": "wrangler deploy",
+    "lint": "biome check",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "hono": "^4.7.17"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@cloudflare/workers-types": "^4.20250110.0",
+    "typescript": "^5",
+    "wrangler": "^4.0.0"
+  }
+}
