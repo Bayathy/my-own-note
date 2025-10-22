@@ -9,6 +9,8 @@
     "type-check": "tsc --noEmit"
   },
   "devDependencies": {
+    "@amethyst/biome-config": "workspace:*",
+    "@amethyst/tsconfig": "workspace:*",
     "@biomejs/biome": "2.2.0",
     "typescript": "^5"
   }

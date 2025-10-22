@@ -7,7 +7,8 @@
   "linter": {
     "rules": {
       "suspicious": {
-        "noDocumentCookie": "off"
+        "noDocumentCookie": "off",
+        "noUnknownAtRules": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "warn"
