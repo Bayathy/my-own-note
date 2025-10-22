@@ -2,6 +2,6 @@
   "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
   "extends": ["./base.json"],
   "files": {
-    "includes": ["**", "!node_modules", "!dist", "!.wrangler"]
+    "includes": ["**", "!node_modules", "!dist", "!.wrangler", "!coverage"]
   }
 }

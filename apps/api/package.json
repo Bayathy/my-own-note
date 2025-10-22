@@ -11,7 +11,11 @@
 		"lint": "biome check",
 		"lint:fix": "biome check --write --unsafe",
 		"type-check": "tsc --noEmit",
-		"clean": "rm -rf dist .wrangler"
+		"test": "vitest",
+		"test:watch": "vitest watch",
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui",
+		"clean": "rm -rf dist .wrangler coverage"
 	},
 	"dependencies": {
 		"hono": "^4.10.1"
@@ -19,7 +23,9 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.2.0",
 		"@cloudflare/workers-types": "^4.20250110.0",
+		"@vitest/coverage-v8": "^3.2.4",
 		"typescript": "^5",
+		"vitest": "^3.2.4",
 		"wrangler": "^4.4.0"
 	}
 }
