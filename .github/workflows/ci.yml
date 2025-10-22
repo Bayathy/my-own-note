@@ -158,7 +158,7 @@ jobs:
           NODE_ENV: production
 
       - name: Build Electron app
-        run: bun run electron:build
+        run: bun run electron:package
         working-directory: apps/desktop
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
