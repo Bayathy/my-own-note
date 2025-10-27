@@ -22,9 +22,12 @@
 		"test:coverage": "vitest run --coverage",
 		"clean": "rm -rf .next out dist coverage"
 	},
+	"description": "A powerful note-taking application",
+	"author": "Amethyst Team",
 	"build": {
 		"appId": "com.amethyst.app",
 		"productName": "Amethyst",
+		"electronVersion": "38.3.0",
 		"files": [
 			"out/**/*",
 			"dist/electron/**/*"
