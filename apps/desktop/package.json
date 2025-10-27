@@ -24,7 +24,13 @@
 	},
 	"description": "A powerful note-taking application",
 	"author": "Amethyst Team",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Bayathy/my-own-note.git",
+		"directory": "apps/desktop"
+	},
 	"build": {
+		"publish": null,
 		"appId": "com.amethyst.app",
 		"productName": "Amethyst",
 		"electronVersion": "38.3.0",

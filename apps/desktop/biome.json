@@ -1,4 +1,15 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
-	"extends": ["@amethyst/biome-config/nextjs.json"]
+	"extends": ["@amethyst/biome-config/nextjs.json"],
+	"files": {
+		"includes": [
+			"**",
+			"!node_modules",
+			"!.next",
+			"!dist",
+			"!build",
+			"!out",
+			"!release"
+		]
+	}
 }
