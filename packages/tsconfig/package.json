@@ -1,0 +1,16 @@
+{
+  "name": "@amethyst/tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "nextjs.json",
+    "workers.json"
+  ],
+  "exports": {
+    "./base.json": "./base.json",
+    "./nextjs.json": "./nextjs.json",
+    "./workers.json": "./workers.json"
+  }
+}

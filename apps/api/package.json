@@ -1,0 +1,33 @@
+{
+	"name": "@amethyst/api",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "wrangler dev",
+		"build": "tsc",
+		"deploy": "wrangler deploy --minify",
+		"cf-typegen": "wrangler types --env-interface CloudflareBindings",
+		"lint": "biome check",
+		"lint:fix": "biome check --write --unsafe",
+		"type-check": "tsc --noEmit",
+		"test": "vitest",
+		"test:watch": "vitest watch",
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui",
+		"clean": "rm -rf dist .wrangler coverage"
+	},
+	"dependencies": {
+		"hono": "^4.10.1"
+	},
+	"devDependencies": {
+		"@amethyst/biome-config": "workspace:*",
+		"@amethyst/tsconfig": "workspace:*",
+		"@biomejs/biome": "2.2.0",
+		"@cloudflare/workers-types": "^4.20250110.0",
+		"@vitest/coverage-v8": "^3.2.4",
+		"typescript": "^5",
+		"vitest": "^3.2.4",
+		"wrangler": "^4.4.0"
+	}
+}
