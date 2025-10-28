@@ -11,7 +11,7 @@
   "devDependencies": {
     "@amethyst/biome-config": "workspace:*",
     "@amethyst/tsconfig": "workspace:*",
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "catalog:linting",
     "typescript": "^5"
   }
 }
