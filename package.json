@@ -3,10 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "bun@1.2.18",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalogs": {
+      "testing": {
+        "vitest": "4.0.4",
+        "@vitest/browser": "4.0.4",
+        "@vitest/coverage-v8": "4.0.4",
+        "@vitest/browser-playwright": "4.0.4"
+      },
+      "linting": {
+        "@biomejs/biome": "2.2.0"
+      }
+    }
+  },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
@@ -18,7 +31,7 @@
     "clean": "turbo run clean && rm -rf node_modules"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "catalog:linting",
     "turbo": "^2.5.8",
     "typescript": "^5"
   }
